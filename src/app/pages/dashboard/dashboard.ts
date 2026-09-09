@@ -63,7 +63,7 @@ export class DashboardComponent {
       vendas: '8.900',
       conectados: '8.400',
       updateSoftware: '91%',
-      imagem: 'gitimages/ranger.png',
+      imagem: 'images/ranger.png',
       telemetria: [
         { vin: '8AFAR23A0R9300001', odometro: '62.000 km', combustivel: 70, statusOleo: 'OK', lat: '-15.7801', long: '-47.9292' },
         { vin: '8AFAR23A0R9300002', odometro: '88.400 km', combustivel: 18, statusOleo: 'Atenção', lat: '-12.9777', long: '-38.5016' }
