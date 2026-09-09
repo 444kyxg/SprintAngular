@@ -90,7 +90,6 @@
   cursor: pointer;
 }
 
-/* Cards Métricas */
 .kpi-card {
   display: flex;
   justify-content: space-between;
@@ -114,7 +113,6 @@
   color: var(--ford-cyan, #00A3E0);
 }
 
-/* Palco da Imagem do Veículo */
 .vehicle-display {
   display: flex;
   justify-content: center;
@@ -149,7 +147,6 @@
   50% { transform: translateY(-8px); }
 }
 
-/* Tabela de Dados */
 .table-card {
   background: #FFFFFF;
   border-radius: var(--border-radius, 8px);
@@ -239,7 +236,6 @@
   font-weight: 600;
 }
 
-/* Botão Hambúrguer */
 .hamburger-btn {
   display: flex;
   flex-direction: column;
@@ -263,7 +259,6 @@
   border-radius: 2px;
 }
 
-/* Sidebar e Gaveta */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -349,7 +344,6 @@
   z-index: 999;
 }
 
-/* Interatividade pointer */
 .nav-item,
 .btn-logout,
 select,

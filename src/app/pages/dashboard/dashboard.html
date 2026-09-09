@@ -1,15 +1,12 @@
 <div class="dashboard-layout">
-  <!-- Botão Hambúrguer (Três Linhas Paraleas) -->
   <button class="hamburger-btn" type="button" (click)="toggleMenu()" aria-label="Abrir menu">
     <span class="bar"></span>
     <span class="bar"></span>
     <span class="bar"></span>
   </button>
 
-  <!-- Overlay para fechar ao clicar fora -->
   <div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
 
-  <!-- Sidebar com Gaveta Animada -->
   <aside class="sidebar" [class.active]="menuAberto">
     <div class="sidebar-brand">
       <img src="images/ford.png" alt="Ford" class="logo">
@@ -31,9 +28,7 @@
     </div>
   </aside>
 
-  <!-- Conteúdo Principal do Dashboard -->
   <div class="dash-container">
-    <!-- Header do Dashboard -->
     <header class="dash-header">
       <div class="header-title">
         <img src="images/ford.png" alt="Ford" class="header-logo">
@@ -44,9 +39,7 @@
       </div>
     </header>
 
-    <!-- Grade Superior: Select + 3 KPI Cards -->
     <section class="kpi-grid">
-      <!-- Filtro Modelo -->
       <div class="card filter-card">
         <label for="vehicle-select">Modelo do Veículo</label>
         <div class="select-custom">
@@ -59,7 +52,6 @@
         </div>
       </div>
 
-      <!-- KPI 1 -->
       <div class="card kpi-card">
         <div class="kpi-info">
           <span class="kpi-title">Total de Vendas</span>
@@ -67,7 +59,6 @@
         </div>
       </div>
 
-      <!-- KPI 2 -->
       <div class="card kpi-card">
         <div class="kpi-info">
           <span class="kpi-title">Conectados</span>
@@ -75,7 +66,6 @@
         </div>
       </div>
 
-      <!-- KPI 3 -->
       <div class="card kpi-card">
         <div class="kpi-info">
           <span class="kpi-title">Update Software</span>
@@ -84,7 +74,6 @@
       </div>
     </section>
 
-    <!-- Visualização Central do Carro -->
     <section class="vehicle-display">
       <div class="vehicle-stage">
         <img [src]="veiculoAtual.imagem" [alt]="veiculoAtual.nome" class="active-vehicle">
@@ -92,7 +81,6 @@
       </div>
     </section>
 
-    <!-- Tabela de Detalhes Telemetria -->
     <section class="table-card">
       <div class="table-header">
         <h3>Telemetria da Frota - {{ veiculoAtual.nome }}</h3>

@@ -1,15 +1,12 @@
 <div class="home-layout">
-  <!-- Botão Hambúrguer (As 3 linhas) -->
   <button class="hamburger-btn" type="button" (click)="toggleMenu()" aria-label="Abrir menu">
     <span class="bar"></span>
     <span class="bar"></span>
     <span class="bar"></span>
   </button>
 
-  <!-- Overlay para fechar ao clicar fora -->
   <div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
 
-  <!-- Sidebar com classe ativada dinamicamente -->
   <aside class="sidebar" [class.active]="menuAberto">
     <div class="sidebar-brand">
       <img src="assets/images/ford.png" alt="Ford" class="logo">
@@ -31,7 +28,6 @@
     </div>
   </aside>
 
-  <!-- Conteúdo Principal -->
   <main class="main-content">
     <header class="top-bar">
       <h2>Painel de Controle</h2>

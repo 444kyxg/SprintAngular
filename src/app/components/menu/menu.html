@@ -1,14 +1,11 @@
-<!-- Botão Hambúrguer (Três linhas paralelas) -->
 <button class="hamburger-btn" (click)="toggleMenu()" type="button" aria-label="Abrir Menu">
   <span class="bar"></span>
   <span class="bar"></span>
   <span class="bar"></span>
 </button>
 
-<!-- Overlay escuro para fechar o menu ao clicar fora -->
 <div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
 
-<!-- Sidebar do Menu -->
 <aside class="sidebar" [class.active]="menuAberto">
   <div class="sidebar-brand">
     <img src="assets/images/ford.png" alt="Ford" class="logo">

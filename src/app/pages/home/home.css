@@ -4,7 +4,6 @@
   padding-top: 60px;
 }
 
-/* Botão Hambúrguer */
 .hamburger-btn {
   display: flex;
   flex-direction: column;
@@ -28,7 +27,6 @@
   border-radius: 2px;
 }
 
-/* Sidebar Gaveta */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -114,7 +112,6 @@
   z-index: 999;
 }
 
-/* Conteúdo Principal */
 .main-content {
   padding: 30px;
   max-width: 1200px;

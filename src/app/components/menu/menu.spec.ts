@@ -8,7 +8,6 @@ describe('MenuComponent', () => {
   let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    // Cria um spy para simular as navegações do Router sem mudar de página nos testes
     const spy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
