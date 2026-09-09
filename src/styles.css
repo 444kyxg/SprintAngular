@@ -1,1 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --ford-blue: #002C6C;
+  --ford-blue-accent: #0056B3;
+  --ford-cyan: #00A3E0;
+  --ford-dark: #0B132B;
+  --ford-gray-bg: #F4F6F9;
+  --ford-card-bg: #FFFFFF;
+  --ford-text: #1C2541;
+  --ford-text-muted: #6C757D;
+  --border-radius: 12px;
+  --shadow-sm: 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--ford-gray-bg);
+  color: var(--ford-text);
+  min-height: 100vh;
+}
+
+button,
+a,
+select,
+.nav-item {
+  cursor: pointer;
+}

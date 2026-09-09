@@ -1,1 +1,31 @@
-<p>menu works!</p>
+<!-- Botão Hambúrguer (Três linhas paralelas) -->
+<button class="hamburger-btn" (click)="toggleMenu()" type="button" aria-label="Abrir Menu">
+  <span class="bar"></span>
+  <span class="bar"></span>
+  <span class="bar"></span>
+</button>
+
+<!-- Overlay escuro para fechar o menu ao clicar fora -->
+<div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
+
+<!-- Sidebar do Menu -->
+<aside class="sidebar" [class.active]="menuAberto">
+  <div class="sidebar-brand">
+    <img src="assets/images/ford.png" alt="Ford" class="logo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item" (click)="irPara('home')">
+      <span>Home</span>
+    </a>
+    <a class="nav-item" (click)="irPara('dashboard')">
+      <span>Dashboard</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn-logout" type="button" (click)="logout()">
+      <span>Sair</span>
+    </button>
+  </div>
+</aside>

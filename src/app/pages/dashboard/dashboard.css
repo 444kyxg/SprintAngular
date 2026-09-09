@@ -1,5 +1,6 @@
 .dashboard-layout {
   padding: 30px;
+  padding-top: 70px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -23,7 +24,7 @@
 
 .header-title h1 {
   font-size: 1.8rem;
-  color: var(--ford-dark);
+  color: var(--ford-dark, #00095b);
   font-weight: 700;
 }
 
@@ -56,15 +57,15 @@
 
 .card {
   background: #FFFFFF;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius, 8px);
   padding: 20px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0,0,0,0.05));
   border: 1px solid #E2E8F0;
-  transition: var(--transition);
+  transition: var(--transition, all 0.3s ease);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg, 0 10px 15px rgba(0,0,0,0.1));
 }
 
 /* Card Filtro */
@@ -72,7 +73,7 @@
   display: block;
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--ford-text-muted);
+  color: var(--ford-text-muted, #64748B);
   text-transform: uppercase;
   margin-bottom: 8px;
 }
@@ -84,7 +85,7 @@
   border-radius: 8px;
   background-color: #F8FAFC;
   font-weight: 600;
-  color: var(--ford-dark);
+  color: var(--ford-dark, #00095b);
   outline: none;
   cursor: pointer;
 }
@@ -99,18 +100,18 @@
 .kpi-title {
   display: block;
   font-size: 0.85rem;
-  color: var(--ford-text-muted);
+  color: var(--ford-text-muted, #64748B);
   margin-bottom: 4px;
 }
 
 .kpi-value {
   font-size: 1.8rem;
   font-weight: 700;
-  color: var(--ford-dark);
+  color: var(--ford-dark, #00095b);
 }
 
 .font-cyan {
-  color: var(--ford-cyan);
+  color: var(--ford-cyan, #00A3E0);
 }
 
 /* Palco da Imagem do Veículo */
@@ -151,9 +152,9 @@
 /* Tabela de Dados */
 .table-card {
   background: #FFFFFF;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius, 8px);
   border: 1px solid #E2E8F0;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0,0,0,0.05));
   padding: 25px;
   margin-top: 20px;
 }
@@ -167,7 +168,7 @@
 
 .table-header h3 {
   font-size: 1.2rem;
-  color: var(--ford-dark);
+  color: var(--ford-dark, #00095b);
 }
 
 .search-input {
@@ -180,7 +181,7 @@
 }
 
 .search-input:focus {
-  border-color: var(--ford-blue-accent);
+  border-color: var(--ford-blue-accent, #102B4E);
 }
 
 .custom-table {
@@ -190,7 +191,7 @@
 }
 
 .custom-table th {
-  background-color: var(--ford-blue);
+  background-color: var(--ford-blue, #00095b);
   color: #FFFFFF;
   padding: 14px 16px;
   font-size: 0.85rem;
@@ -204,13 +205,13 @@
   padding: 16px;
   border-bottom: 1px solid #E2E8F0;
   font-size: 0.9rem;
-  color: var(--ford-text);
+  color: var(--ford-text, #1E293B);
 }
 
 .vin-code {
   font-family: monospace;
   font-weight: 600;
-  color: var(--ford-blue-accent);
+  color: var(--ford-blue-accent, #102B4E);
 }
 
 .progress-bar-container {
@@ -225,7 +226,7 @@
 
 .progress-fill {
   height: 6px;
-  background-color: var(--ford-cyan);
+  background-color: var(--ford-cyan, #00A3E0);
   border-radius: 10px;
 }
 
@@ -236,6 +237,124 @@
   border-radius: 4px;
   font-size: 0.8rem;
   font-weight: 600;
+}
+
+/* Botão Hambúrguer */
+.hamburger-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+}
+
+.hamburger-btn .bar {
+  width: 100%;
+  height: 3px;
+  background-color: #00095b;
+  border-radius: 2px;
+}
+
+/* Sidebar e Gaveta */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 250px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s ease;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar-brand {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.sidebar-brand .logo {
+  height: 40px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  flex-grow: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: var(--ford-dark, #00095b);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background-color: #F1F5F9;
+  color: var(--ford-blue-accent, #102B4E);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.btn-logout {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #FFEBEE;
+  color: #C62828;
+  font-weight: 700;
+  transition: background-color 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: #FFCDD2;
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* Interatividade pointer */
+.nav-item,
+.btn-logout,
+select,
+.hamburger-btn {
+  cursor: pointer;
 }
 
 @media (max-width: 992px) {

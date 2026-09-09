@@ -1,23 +1,56 @@
 <div class="dashboard-layout">
-  <!-- Header do Dashboard -->
-  <header class="dash-header">
-    <div class="header-title">
-      <img src="assets/images/ford.png" alt="Ford" class="header-logo">
-      <h1>Dashboard FORD</h1>
-    </div>
-    <div class="header-status">
-      <span class="status-indicator"></span> Sistema Conectado
-    </div>
-  </header>
+  <!-- Botão Hambúrguer (Três Linhas Paraleas) -->
+  <button class="hamburger-btn" type="button" (click)="toggleMenu()" aria-label="Abrir menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
 
+  <!-- Overlay para fechar ao clicar fora -->
+  <div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
+
+  <!-- Sidebar com Gaveta Animada -->
+  <aside class="sidebar" [class.active]="menuAberto">
+    <div class="sidebar-brand">
+      <img src="images/ford.png" alt="Ford" class="logo">
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item" (click)="irParaHome()">
+        <span>Home</span>
+      </a>
+      <a class="nav-item active" (click)="irParaDashboard()">
+        <span>Dashboard</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" type="button" (click)="logout()">
+        <span>Sair</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Conteúdo Principal do Dashboard -->
   <div class="dash-container">
+    <!-- Header do Dashboard -->
+    <header class="dash-header">
+      <div class="header-title">
+        <img src="images/ford.png" alt="Ford" class="header-logo">
+        <h1>Dashboard FORD</h1>
+      </div>
+      <div class="header-status">
+        <span class="status-indicator"></span> Sistema Conectado
+      </div>
+    </header>
+
     <!-- Grade Superior: Select + 3 KPI Cards -->
     <section class="kpi-grid">
       <!-- Filtro Modelo -->
       <div class="card filter-card">
         <label for="vehicle-select">Modelo do Veículo</label>
         <div class="select-custom">
-          <select id="vehicle-select">
+          <select id="vehicle-select" [(ngModel)]="modeloSelecionado">
             <option value="mustang">Mustang</option>
             <option value="broncoSport">Bronco Sport</option>
             <option value="ranger">Ranger</option>
@@ -30,7 +63,7 @@
       <div class="card kpi-card">
         <div class="kpi-info">
           <span class="kpi-title">Total de Vendas</span>
-          <span class="kpi-value">1.500</span>
+          <span class="kpi-value">{{ veiculoAtual.vendas }}</span>
         </div>
       </div>
 
@@ -38,7 +71,7 @@
       <div class="card kpi-card">
         <div class="kpi-info">
           <span class="kpi-title">Conectados</span>
-          <span class="kpi-value">500</span>
+          <span class="kpi-value">{{ veiculoAtual.conectados }}</span>
         </div>
       </div>
 
@@ -46,7 +79,7 @@
       <div class="card kpi-card">
         <div class="kpi-info">
           <span class="kpi-title">Update Software</span>
-          <span class="kpi-value font-cyan">350</span>
+          <span class="kpi-value font-cyan">{{ veiculoAtual.updateSoftware }}</span>
         </div>
       </div>
     </section>
@@ -54,7 +87,7 @@
     <!-- Visualização Central do Carro -->
     <section class="vehicle-display">
       <div class="vehicle-stage">
-        <img src="assets/images/mustang.png" alt="Mustang" class="active-vehicle">
+        <img [src]="veiculoAtual.imagem" [alt]="veiculoAtual.nome" class="active-vehicle">
         <div class="vehicle-shadow"></div>
       </div>
     </section>
@@ -62,9 +95,14 @@
     <!-- Tabela de Detalhes Telemetria -->
     <section class="table-card">
       <div class="table-header">
-        <h3>Telemetria da Frota</h3>
+        <h3>Telemetria da Frota - {{ veiculoAtual.nome }}</h3>
         <div class="search-box">
-          <input type="text" placeholder="Buscar por Código VIN (ex: 2FRH...)" class="search-input">
+          <input 
+            type="text" 
+            placeholder="Buscar por Código VIN..." 
+            class="search-input"
+            [(ngModel)]="termoBusca"
+          >
         </div>
       </div>
 
@@ -81,18 +119,24 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="vin-code">2FRHDUYS2Y63NHD22454</td>
-              <td>54.200 km</td>
+            <tr *ngFor="let item of telemetriaFiltrada">
+              <td class="vin-code">{{ item.vin }}</td>
+              <td>{{ item.odometro }}</td>
               <td>
                 <div class="progress-bar-container">
-                  <div class="progress-fill" style="width: 78%;"></div>
-                  <span>78%</span>
+                  <div class="progress-fill" [style.width.%]="item.combustivel"></div>
+                  <span>{{ item.combustivel }}%</span>
                 </div>
               </td>
-              <td><span class="badge-status ok">98% (OK)</span></td>
-              <td>-12.9711</td>
-              <td>-38.5108</td>
+              <td><span class="badge-status ok">{{ item.statusOleo }}</span></td>
+              <td>{{ item.lat }}</td>
+              <td>{{ item.long }}</td>
+            </tr>
+
+            <tr *ngIf="telemetriaFiltrada.length === 0">
+              <td colspan="6" style="text-align: center; padding: 15px;">
+                Nenhum código VIN encontrado.
+              </td>
             </tr>
           </tbody>
         </table>

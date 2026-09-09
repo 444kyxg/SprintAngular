@@ -1,21 +1,31 @@
 <div class="home-layout">
-  <!-- Sidebar Navegação -->
-  <aside class="sidebar">
+  <!-- Botão Hambúrguer (As 3 linhas) -->
+  <button class="hamburger-btn" type="button" (click)="toggleMenu()" aria-label="Abrir menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+
+  <!-- Overlay para fechar ao clicar fora -->
+  <div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
+
+  <!-- Sidebar com classe ativada dinamicamente -->
+  <aside class="sidebar" [class.active]="menuAberto">
     <div class="sidebar-brand">
       <img src="assets/images/ford.png" alt="Ford" class="logo">
     </div>
 
     <nav class="sidebar-nav">
-      <a class="nav-item active">
+      <a class="nav-item active" (click)="irParaHome()">
         <span>Home</span>
       </a>
-      <a class="nav-item">
+      <a class="nav-item" (click)="irParaDashboard()">
         <span>Dashboard</span>
       </a>
     </nav>
 
     <div class="sidebar-footer">
-      <button class="btn-logout">
+      <button class="btn-logout" type="button" (click)="logout()">
         <span>Sair</span>
       </button>
     </div>
@@ -36,7 +46,7 @@
         <h1>Seja bem-vindo ao Ford Enterprise System</h1>
         <p>Acompanhe métricas em tempo real, gerencie telemetria avançada e atualizações de software da sua frota conectada.</p>
         
-        <a class="btn-primary-action">
+        <a class="btn-primary-action" (click)="irParaDashboard()">
           Acessar Dashboard
         </a>
       </div>
