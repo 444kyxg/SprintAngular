@@ -1,134 +1,104 @@
 <div class="dashboard-layout">
-  <button class="hamburger-btn" type="button" (click)="toggleMenu()" aria-label="Abrir menu">
-    <span class="bar"></span>
-    <span class="bar"></span>
-    <span class="bar"></span>
-  </button>
+  <app-menu></app-menu>
 
-  <div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
-
-  <aside class="sidebar" [class.active]="menuAberto">
-    <div class="sidebar-brand">
-      <img src="images/ford.png" alt="Ford" class="logo">
+  <header class="dash-header">
+    <div class="header-title">
+      <img src="images/ford.png" alt="Ford" class="header-logo">
+      <h1>Dashboard de Telemetria</h1>
     </div>
 
-    <nav class="sidebar-nav">
-      <a class="nav-item" (click)="irParaHome()">
-        <span>Home</span>
-      </a>
-      <a class="nav-item active" (click)="irParaDashboard()">
-        <span>Dashboard</span>
-      </a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <button class="btn-logout" type="button" (click)="logout()">
-        <span>Sair</span>
-      </button>
-    </div>
-  </aside>
-
-  <div class="dash-container">
-    <header class="dash-header">
-      <div class="header-title">
-        <img src="images/ford.png" alt="Ford" class="header-logo">
-        <h1>Dashboard FORD</h1>
-      </div>
+    <div class="header-actions">
       <div class="header-status">
-        <span class="status-indicator"></span> Sistema Conectado
+        <span class="status-indicator"></span>
+        <span>API Conectada</span>
       </div>
-    </header>
+    </div>
+  </header>
 
+  <main *ngIf="!loading && selectedVehicle">
     <section class="kpi-grid">
       <div class="card filter-card">
-        <label for="vehicle-select">Modelo do Veículo</label>
+        <label>Selecione o Veículo</label>
         <div class="select-custom">
-          <select id="vehicle-select" [(ngModel)]="modeloSelecionado">
-            <option value="mustang">Mustang</option>
-            <option value="broncoSport">Bronco Sport</option>
-            <option value="ranger">Ranger</option>
-            <option value="territory">Territory</option>
+          <select 
+            [(ngModel)]="selectedVehicleId" 
+            (ngModelChange)="onVehicleChange($event)"
+          >
+            <option *ngFor="let v of vehicles" [value]="v.id">
+              {{ v.vehicle }}
+            </option>
           </select>
         </div>
       </div>
 
       <div class="card kpi-card">
-        <div class="kpi-info">
-          <span class="kpi-title">Total de Vendas</span>
-          <span class="kpi-value">{{ veiculoAtual.vendas }}</span>
-        </div>
+        <span class="kpi-title">Volume Total</span>
+        <span class="kpi-value">{{ selectedVehicle.volumetotal | number }}</span>
       </div>
 
       <div class="card kpi-card">
-        <div class="kpi-info">
-          <span class="kpi-title">Conectados</span>
-          <span class="kpi-value">{{ veiculoAtual.conectados }}</span>
-        </div>
+        <span class="kpi-title">Conectados</span>
+        <span class="kpi-value font-cyan">{{ selectedVehicle.connected | number }}</span>
       </div>
 
       <div class="card kpi-card">
-        <div class="kpi-info">
-          <span class="kpi-title">Update Software</span>
-          <span class="kpi-value font-cyan">{{ veiculoAtual.updateSoftware }}</span>
-        </div>
+        <span class="kpi-title">Atualizações de Software</span>
+        <span class="kpi-value">{{ selectedVehicle.softwareUpdates | number }}</span>
       </div>
     </section>
 
     <section class="vehicle-display">
       <div class="vehicle-stage">
-        <img [src]="veiculoAtual.imagem" [alt]="veiculoAtual.nome" class="active-vehicle">
+        <img [src]="selectedVehicle.img" [alt]="selectedVehicle.vehicle" class="active-vehicle">
         <div class="vehicle-shadow"></div>
       </div>
     </section>
 
     <section class="table-card">
       <div class="table-header">
-        <h3>Telemetria da Frota - {{ veiculoAtual.nome }}</h3>
-        <div class="search-box">
-          <input 
-            type="text" 
-            placeholder="Buscar por Código VIN..." 
-            class="search-input"
-            [(ngModel)]="termoBusca"
-          >
-        </div>
+        <h3>Telemetria em Tempo Real</h3>
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Buscar por VIN..." 
+          [(ngModel)]="searchTerm"
+        >
       </div>
 
-      <div class="table-responsive">
-        <table class="custom-table">
-          <thead>
-            <tr>
-              <th>Código VIN</th>
-              <th>Odômetro</th>
-              <th>Nível de Combustível</th>
-              <th>Status do Óleo</th>
-              <th>Lat</th>
-              <th>Long</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of telemetriaFiltrada">
-              <td class="vin-code">{{ item.vin }}</td>
-              <td>{{ item.odometro }}</td>
-              <td>
-                <div class="progress-bar-container">
-                  <div class="progress-fill" [style.width.%]="item.combustivel"></div>
-                  <span>{{ item.combustivel }}%</span>
-                </div>
-              </td>
-              <td><span class="badge-status ok">{{ item.statusOleo }}</span></td>
-              <td>{{ item.lat }}</td>
-              <td>{{ item.long }}</td>
-            </tr>
-
-            <tr *ngIf="telemetriaFiltrada.length === 0">
-              <td colspan="6" style="text-align: center; padding: 15px;">
-                Nenhum código VIN encontrado.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Código VIN</th>
+            <th>Odômetro</th>
+            <th>Nível Combustível</th>
+            <th>Status</th>
+            <th>Coordenadas (Lat / Long)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of telemetriaFiltrada">
+            <td class="vin-code">{{ t.vin }}</td>
+            <td>{{ t.odometro | number }} km</td>
+            <td>
+              <div class="progress-bar-container">
+                <div class="progress-fill" [style.width.%]="t.nivelCombustivel"></div>
+                <span>{{ t.nivelCombustivel }}%</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge-status" [ngClass]="t.status === 'on' ? 'ok' : 'off'">
+                {{ t.status === 'on' ? 'LIGADO' : 'DESLIGADO' }}
+              </span>
+            </td>
+            <td>{{ t.lat }}, {{ t.long }}</td>
+          </tr>
+          <tr *ngIf="telemetriaFiltrada.length === 0">
+            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">
+              Nenhum registro encontrado.
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </section>
-  </div>
+  </main>
 </div>

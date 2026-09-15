@@ -1,4 +1,4 @@
-<button class="hamburger-btn" (click)="toggleMenu()" type="button" aria-label="Abrir Menu">
+<button class="hamburger-btn" (click)="toggleMenu()" type="button" aria-label="Menu">
   <span class="bar"></span>
   <span class="bar"></span>
   <span class="bar"></span>
@@ -6,9 +6,10 @@
 
 <div class="menu-overlay" *ngIf="menuAberto" (click)="toggleMenu()"></div>
 
-<aside class="sidebar" [class.active]="menuAberto">
-  <div class="sidebar-brand">
-    <img src="assets/images/ford.png" alt="Ford" class="logo">
+<aside class="sidebar" [class.open]="menuAberto">
+  <div class="sidebar-header">
+    <img src="assets/ford.png" alt="Ford" class="logo" (error)="$any($event.target).src='images/ford.png'">
+    <button class="close-btn" (click)="toggleMenu()">✕</button>
   </div>
 
   <nav class="sidebar-nav">

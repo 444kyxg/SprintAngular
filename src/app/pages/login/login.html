@@ -1,51 +1,50 @@
 <div class="login-container">
-  <div class="login-wrapper">
-    <div class="login-banner">
-      <div class="banner-overlay"></div>
-      <img src="assets/images/ford-ranger.png" alt="Veículo Ford" class="vehicle-hero">
-      <div class="banner-text">
-        <h2>Inovação & Performance</h2>
-        <p>Gerenciamento inteligente de frota conectada.</p>
-      </div>
+  <div class="login-banner">
+    <span class="brand-tag">Veículos Ford</span>
+    <h2>Inovação & Performance</h2>
+    <p>Gerenciamento inteligente de frota conectada.</p>
+  </div>
+
+  <div class="login-form-container">
+    <div class="login-header">
+      <h3>Boas-vindas</h3>
+      <p>Acesse com suas credenciais do sistema</p>
     </div>
 
-    <div class="login-card">
-      <div class="brand-header">
-        <img src="assets/images/ford-logo.png" alt="Logo Ford" class="ford-logo">
-        <span class="system-tag">Fleet OS</span>
+    @if (mensagemErro) {
+      <div class="error-message">
+        {{ mensagemErro }}
+      </div>
+    }
+
+    <form (ngSubmit)="login()">
+      <div class="form-group">
+        <label for="usuario">Usuário</label>
+        <input 
+          type="text" 
+          id="usuario" 
+          name="nome" 
+          class="form-control" 
+          [(ngModel)]="usuario.nome" 
+          placeholder="Digite seu usuário" 
+          required
+        >
       </div>
 
-      <div class="welcome-text">
-        <h3>Boas-vindas</h3>
-        <p>Acesse com suas credenciais do sistema</p>
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input 
+          type="password" 
+          id="senha" 
+          name="senha" 
+          class="form-control" 
+          [(ngModel)]="usuario.senha" 
+          placeholder="••••••••" 
+          required
+        >
       </div>
 
-      <form class="login-form">
-        <div class="form-group">
-          <label for="username">Usuário</label>
-          <div class="input-wrapper">
-            <i class="icon-user"></i>
-            <input type="text" id="username" placeholder="Digite seu usuário" required>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="password">Senha</label>
-          <div class="input-wrapper">
-            <i class="icon-lock"></i>
-            <input type="password" id="password" placeholder="••••••••" required>
-          </div>
-        </div>
-
-        <div class="form-options">
-          <label class="remember-me">
-            <input type="checkbox">
-            <span>Lembrar automaticamente</span>
-          </label>
-        </div>
-
-        <button type="submit" class="btn-login">Entrar no Sistema</button>
-      </form>
-    </div>
+      <button type="submit" class="btn-primary">Entrar no Sistema</button>
+    </form>
   </div>
 </div>

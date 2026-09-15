@@ -1,119 +1,119 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { VeiculoService, Vehicle, VehiclesResponse, VehicleTelemetry } from '../../services/veiculo.service';
+import { AuthService } from '../../services/auth';
+import { MenuComponent } from '../../components/menu/menu';
 
-interface ItemTelemetria {
+interface TelemetriaItem {
   vin: string;
-  odometro: string;
-  combustivel: number;
-  statusOleo: string;
-  lat: string;
-  long: string;
-}
-
-interface DadosVeiculo {
-  nome: string;
-  vendas: string;
-  conectados: string;
-  updateSoftware: string;
-  imagem: string;
-  telemetria: ItemTelemetria[];
+  odometro: number;
+  nivelCombustivel: number;
+  status: string;
+  lat: number;
+  long: number;
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule, MenuComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  vehicles: Vehicle[] = [];
+  selectedVehicleId: number = 1;
+  selectedVehicle?: Vehicle;
+
+  vinsCadastrados: string[] = [
+    '2FRHDUYS2Y63NHD22454',
+    '2RFAASDY54E4HDU34874',
+    '2FRHDUYS2Y63NHD22455',
+    '2RFAASDY54E4HDU34875',
+    '2FRHDUYS2Y63NHD22654',
+    '2FRHDUYS2Y63NHD22854'
+  ];
+
+  telemetriaLista: TelemetriaItem[] = [];
+  searchTerm: string = '';
   menuAberto: boolean = false;
-  modeloSelecionado: string = 'mustang';
-  termoBusca: string = '';
+  loading: boolean = true;
 
-  // Base de dados com métricas e telemetria por modelo
-  dadosVeiculos: Record<string, DadosVeiculo> = {
-    mustang: {
-      nome: 'Mustang',
-      vendas: '1.250',
-      conectados: '1.180',
-      updateSoftware: '98%',
-      imagem: 'images/mustang.png',
-      telemetria: [
-        { vin: '1FA6P8CF0R5100001', odometro: '12.450 km', combustivel: 85, statusOleo: 'OK', lat: '-23.5505', long: '-46.6333' },
-        { vin: '1FA6P8CF0R5100002', odometro: '45.100 km', combustivel: 32, statusOleo: 'OK', lat: '-22.9068', long: '-43.1729' },
-        { vin: '1FA6P8CF0R5100003', odometro: '8.300 km', combustivel: 95, statusOleo: 'OK', lat: '-19.9167', long: '-43.9345' }
-      ]
-    },
-    broncoSport: {
-      nome: 'Bronco Sport',
-      vendas: '3.400',
-      conectados: '3.250',
-      updateSoftware: '94%',
-      imagem: 'images/broncoSport.png',
-      telemetria: [
-        { vin: '3FA6P0SU0R8200001', odometro: '28.900 km', combustivel: 60, statusOleo: 'OK', lat: '-25.4284', long: '-49.2733' },
-        { vin: '3FA6P0SU0R8200002', odometro: '15.200 km', combustivel: 45, statusOleo: 'OK', lat: '-30.0346', long: '-51.2177' }
-      ]
-    },
-    ranger: {
-      nome: 'Ranger',
-      vendas: '8.900',
-      conectados: '8.400',
-      updateSoftware: '91%',
-      imagem: 'images/ranger.png',
-      telemetria: [
-        { vin: '8AFAR23A0R9300001', odometro: '62.000 km', combustivel: 70, statusOleo: 'OK', lat: '-15.7801', long: '-47.9292' },
-        { vin: '8AFAR23A0R9300002', odometro: '88.400 km', combustivel: 18, statusOleo: 'Atenção', lat: '-12.9777', long: '-38.5016' }
-      ]
-    },
-    territory: {
-      nome: 'Territory',
-      vendas: '2.100',
-      conectados: '1.980',
-      updateSoftware: '96%',
-      imagem: 'images/territory.png',
-      telemetria: [
-        { vin: 'LVSH78100R1400001', odometro: '5.100 km', combustivel: 90, statusOleo: 'OK', lat: '-8.0476', long: '-34.8770' }
-      ]
-    }
-  };
+  constructor(
+    private veiculoService: VeiculoService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    public router: Router
+  ) {}
 
-  constructor(private router: Router) {}
-
-  get veiculoAtual(): DadosVeiculo {
-    return this.dadosVeiculos[this.modeloSelecionado] || this.dadosVeiculos['mustang'];
+  ngOnInit(): void {
+    this.carregarDashboard();
   }
 
-  get telemetriaFiltrada(): ItemTelemetria[] {
-    const lista = this.veiculoAtual.telemetria;
-    if (!this.termoBusca.trim()) {
-      return lista;
-    }
-    return lista.filter(item => 
-      item.vin.toLowerCase().includes(this.termoBusca.toLowerCase())
+  carregarDashboard(): void {
+    this.loading = true;
+
+    this.veiculoService.getVehicles().subscribe({
+      next: ({ vehicles }: VehiclesResponse) => {
+        this.vehicles = vehicles;
+        if (this.vehicles.length > 0) {
+          this.selectedVehicleId = Number(this.vehicles[0].id);
+          this.selectedVehicle = { ...this.vehicles[0] };
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        console.error('Erro ao carregar veículos:', err);
+        this.loading = false;
+      }
+    });
+
+    this.telemetriaLista = [];
+    this.vinsCadastrados.forEach((vin: string) => {
+      this.veiculoService.getVehicleData(vin).subscribe({
+        next: (data: VehicleTelemetry) => {
+          this.telemetriaLista.push({
+            vin: vin,
+            odometro: data.odometro,
+            nivelCombustivel: data.nivelCombustivel,
+            status: data.status,
+            lat: data.lat,
+            long: data.long
+          });
+          this.cdr.detectChanges();
+        },
+        error: (err: any) => console.error(`Erro no VIN ${vin}:`, err)
+      });
+    });
+  }
+
+  get telemetriaFiltrada(): TelemetriaItem[] {
+    if (!this.searchTerm.trim()) return this.telemetriaLista;
+    return this.telemetriaLista.filter((item: TelemetriaItem) =>
+      item.vin.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  onVehicleChange(id: any): void {
+    const numericId = Number(id);
+    this.selectedVehicleId = numericId;
+
+    const veiculoEncontrado = this.vehicles.find((v: Vehicle) => Number(v.id) === numericId);
+
+    if (veiculoEncontrado) {
+      this.selectedVehicle = { ...veiculoEncontrado };
+      this.cdr.detectChanges();
+    }
   }
 
   toggleMenu(): void {
     this.menuAberto = !this.menuAberto;
   }
 
-  irParaHome(): void {
-    this.menuAberto = false;
-    this.router.navigate(['/home']);
-  }
-
-  irParaDashboard(): void {
-    this.menuAberto = false;
-    this.router.navigate(['/dashboard']);
-  }
-
   logout(): void {
-    this.menuAberto = false;
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 }
