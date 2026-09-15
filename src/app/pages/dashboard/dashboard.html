@@ -61,7 +61,7 @@
           type="text" 
           class="search-input" 
           placeholder="Buscar por VIN..." 
-          [(ngModel)]="searchTerm"
+          (input)="onSearchInput($event)"
         >
       </div>
 

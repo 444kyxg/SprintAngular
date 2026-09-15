@@ -1,7 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, filter } from 'rxjs/operators';
 import { VeiculoService, Vehicle, VehiclesResponse, VehicleTelemetry } from '../../services/veiculo.service';
 import { AuthService } from '../../services/auth';
 import { MenuComponent } from '../../components/menu/menu';
@@ -22,7 +24,7 @@ interface TelemetriaItem {
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   vehicles: Vehicle[] = [];
   selectedVehicleId: number = 1;
   selectedVehicle?: Vehicle;
@@ -41,6 +43,10 @@ export class DashboardComponent implements OnInit {
   menuAberto: boolean = false;
   loading: boolean = true;
 
+  // RxJS: Subject para capturar o fluxo de digitação da busca
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
+
   constructor(
     private veiculoService: VeiculoService,
     private authService: AuthService,
@@ -50,6 +56,33 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarDashboard();
+    this.configurarFiltroRxJS();
+  }
+
+  ngOnDestroy(): void {
+    // Evita vazamento de memória ao destruir o componente
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+  }
+
+  // Uso dos operadores RxJS exigidos no filtro de busca
+  private configurarFiltroRxJS(): void {
+    this.searchSubscription = this.searchSubject.pipe(
+      debounceTime(300),                                   // Aguarda 300ms de pausa na digitação
+      distinctUntilChanged(),                              // Dispara só se o valor realmente mudou
+      map((term: string) => term.trim().toLowerCase()),    // Transforma para letras minúsculas sem espaços
+      filter((term: string) => term.length === 0 || term.length >= 2) // Aceita campo vazio ou 2+ caracteres
+    ).subscribe((termProcessed: string) => {
+      this.searchTerm = termProcessed;
+      this.cdr.detectChanges();
+    });
+  }
+
+  // Evento disparado no input do HTML
+  onSearchInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.searchSubject.next(inputElement.value);
   }
 
   carregarDashboard(): void {
@@ -91,9 +124,9 @@ export class DashboardComponent implements OnInit {
   }
 
   get telemetriaFiltrada(): TelemetriaItem[] {
-    if (!this.searchTerm.trim()) return this.telemetriaLista;
+    if (!this.searchTerm) return this.telemetriaLista;
     return this.telemetriaLista.filter((item: TelemetriaItem) =>
-      item.vin.toLowerCase().includes(this.searchTerm.toLowerCase())
+      item.vin.toLowerCase().includes(this.searchTerm)
     );
   }
 
